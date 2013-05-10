@@ -1,0 +1,9 @@
+This project aims at showing the difference between a binary semaphore and a    mutex.
+
+What I am doing here is a simple producer/consumer problem with two pthreads.
+
+In one example, namely mutex, I'll be using mutex to synchronize the access and then I'll show how that leads to a disaster
+
+The next one, I'll show how using a semaphore as if it was a mutex will cause   the same problem if not worse
+
+Finally, I'll use the semaphore the right way to signal between the threads what to be done

@@ -17,7 +17,7 @@ int main(void)
 {
 	pthread_t producerThread, consumerThread;
 	
-	sem_init(&sem, 0, 1);
+	sem_init(&sem, 0, 0);
 	
 	pthread_create(&producerThread, NULL, producer, NULL);
 	pthread_create(&consumerThread, NULL, consumer, NULL);
@@ -29,13 +29,16 @@ int main(void)
 
 static void * producer(void *para)
 {
-/*What I've done here is simply a disaster! 
-I called wait which will suspend the execution until a CONSUMER! gives me a 
-post; I then produced and called post to notify any waiting thread that it 
-can go on... */
+/*What I've done here is even worse than in the mutex example 
+One possible scenario here is if the consumer went first..
+it'll increment the semaphore which means when the producer starts it'll block
+and keep blocking until the consumer gave it the control back!!! */
 	while(1)
 	{
 		sem_wait(&sem);
+		/* Note that since the initial value for the semaphore 
+		was set to 0, we'll have a deadlock here where both threads 
+		will be waiting! */
 		sharedBuffer[0] = 'a';
 		sharedBuffer[1] = '\0';
 		sem_post(&sem);
@@ -45,7 +48,9 @@ can go on... */
 
 static void * consumer(void *para)
 {
-/* the disaster goes on */
+/* the disaster goes on
+I waited for a signal from the producer and then consumed from the buffer
+then signaled again to the waiting thread.... */
 	while(1)
 	{
 		sem_wait(&sem);

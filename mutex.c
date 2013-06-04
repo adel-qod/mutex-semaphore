@@ -26,15 +26,16 @@ int main(void)
 	return 0;
 }
 
-static void * producer(void *para)
-{
-/*Plain and simple this code is not bugged but is disasterous
-The question is what am I trying to achieve and what I really got
+/*Plain and simple this code is not just bugged but is disasterous
 Here I have a buffer that I wanted to protect so that it'll 
 only be accessed when it's got data
 What I got was that it was accessed whenever one thread that was using it let
 it go; obviously this means that the consumer in my case can consume many times
-before a producer comes along */
+before a producer comes along and a producer can produce several times before
+a consumer consumes..it all depends on the scheduling */
+
+static void * producer(void *para)
+{
 
 	while(1)
 	{

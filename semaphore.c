@@ -12,13 +12,13 @@ static void * consumer(void *);
 static char sharedBuffer[BUFFER_SIZE];
 
 static sem_t sem;
-
+static sem_t sem2;
 int main(void)
 {
 	pthread_t producerThread, consumerThread;
-	
-	sem_init(&sem, 0, 1);
-	
+
+	sem_init(&sem, 0, 0);
+	sem_init(&sem2, 0, 1);
 	pthread_create(&producerThread, NULL, producer, NULL);
 	pthread_create(&consumerThread, NULL, consumer, NULL);
 
@@ -29,8 +29,10 @@ int main(void)
 
 static void * producer(void *para)
 {
+	int x;
 	while(1)
 	{
+		sem_wait(&sem2);//lock so that a producer 
 		sharedBuffer[0] = 'a';
 		sharedBuffer[1] = '\0';
 		sem_post(&sem);
@@ -45,6 +47,7 @@ static void * consumer(void *para)
 		sem_wait(&sem);
 		printf("%s\n", sharedBuffer);
 		sharedBuffer[0] = '\0';
+		sem_post(&sem2);
 	}
 	return NULL;
 }

@@ -17,8 +17,8 @@ int main(void)
 {
 	pthread_t producerThread, consumerThread;
 
-	sem_init(&sem, 0, 0);
-	sem_init(&sem2, 0, 1);
+	sem_init(&sem, 0, 0);/* inited with 0 so consumer waits at first */
+	sem_init(&sem2, 0, 1);/* 1 because producer should start first */
 	pthread_create(&producerThread, NULL, producer, NULL);
 	pthread_create(&consumerThread, NULL, consumer, NULL);
 
@@ -32,7 +32,13 @@ static void * producer(void *para)
 	int x;
 	while(1)
 	{
-		sem_wait(&sem2);//lock so that a producer 
+		/*
+		1- Wait till a consumer consumes
+		2- Fill in the buffer
+		3- Signal out to the consumer that we're done
+		4- Repeat 
+		*/
+		sem_wait(&sem2);
 		sharedBuffer[0] = 'a';
 		sharedBuffer[1] = '\0';
 		sem_post(&sem);
@@ -44,6 +50,11 @@ static void * consumer(void *para)
 {
 	while(1)
 	{
+		/* 1- Wait for the producer
+		   2- consume 
+		   3- Singal to the producer that we've consumed
+		   4- Repeat
+		 */
 		sem_wait(&sem);
 		printf("%s\n", sharedBuffer);
 		sharedBuffer[0] = '\0';

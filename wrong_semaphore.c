@@ -36,7 +36,7 @@ and keep blocking until the consumer gave it the control back!!! */
 	while(1)
 	{
 		sem_wait(&sem);
-		/* Note that since the initial value for the semaphore 
+		/* Note that when the initial value for the semaphore 
 		was set to 0, we'll have a deadlock here where both threads 
 		will be waiting! */
 		sharedBuffer[0] = 'a';

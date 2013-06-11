@@ -7,7 +7,7 @@ Finally, I'll use the semaphore the right way to signal between the threads what
 On compilation:
 This project was compiled using gcc 4.6.3 on a Linux machine running 3.2.0 64bit
 Compile it with:
-gcc -Wall <file_name> -o <executable_name> -lpthread
+gcc <file_name> -o <executable_name> -lpthread
 
 Final note:
 The error code checking is intentionally left, this is not a production code and is aimed only to teach a concept about semaphores/mutexes thus the error checking was removed for clarity's sake

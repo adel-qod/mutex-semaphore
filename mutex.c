@@ -31,8 +31,9 @@ Here I have a buffer that I wanted to protect so that it'll
 only be accessed when it's got data
 What I got was that it was accessed whenever one thread that was using it let
 it go; obviously this means that the consumer in my case can consume many times
-before a producer comes along and a producer can produce several times before
-a consumer consumes..it all depends on the scheduling */
+before a producer comes along; also, a producer can produce several times before
+a consumer consumes..it all depends on the scheduling which is obviously not
+what we want */
 
 static void * producer(void *para)
 {
